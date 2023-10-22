@@ -55,28 +55,7 @@ namespace ISM6225_Fall_2023_Assignment_2
                 ranges.Add(new List<int> { (int)start, (int)end });
             }
         }
-        public static string ConvertIListToNestedList(IList<IList<int>> list)
-        {
-            if (list == null)
-            {
-                return "null";
-            }
-
-            var result = new List<string>();
-            foreach (var range in list)
-            {
-                if (range.Count == 1)
-                {
-                    result.Add($"[{range[0]}, {range[0]}]");
-                }
-                else if (range.Count == 2)
-                {
-                    result.Add($"[{range[0]}, {range[1]}]");
-                }
-            }
-
-            return "[" + string.Join(", ", result) + "]";
-        }
+        
 
         // question 1 self reflection & Recommendations
         // Finding missing ranges in a sorted array was a specific challenge that had to be solved in the question.
@@ -324,29 +303,7 @@ namespace ISM6225_Fall_2023_Assignment_2
 
 
         // Question 7 
-        public static string ConvertIListToArray(IList<string> list)
-        {
-            // Create a StringBuilder to build the JSON array
-            StringBuilder result = new StringBuilder();
-            result.Append("["); // Add the opening square bracket for the array
-
-            for (int i = 0; i < list.Count; i++)
-            {
-                // Enclose each string in double quotes and add it to the array
-                result.Append("\"" + list[i] + "\"");
-
-                // Add a comma and a space unless it's the last string
-                if (i < list.Count - 1)
-                {
-                    result.Append(", ");
-                }
-            }
-
-            result.Append("]"); // Add the closing square bracket for the array
-
-            // Return the JSON array as a string
-            return result.ToString();
-        }
+       
 
         // Function to generate possible next moves in the Flip Game
         public static List<string> GeneratePossibleNextMoves(string currentState)
@@ -418,8 +375,47 @@ namespace ISM6225_Fall_2023_Assignment_2
         //   The code iterates through the characters of the input string and appends non-vowel characters to the result string.
         //   It uses a StringBuilder to efficiently build the result string character by character.
         //   It's essential to ensure that all necessary using directives are included at the top of the code file to avoid compilation errors. 
+        
+        // Inbuilt functions
+        static string ConvertIListToNestedList(IList<IList<int>> input)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append("["); // Add the opening square bracket for the outer list
+
+            for (int i = 0; i < input.Count; i++)
+            {
+                IList<int> innerList = input[i];
+                sb.Append("[" + string.Join(",", innerList) + "]");
+
+                // Add a comma unless it's the last inner list
+                if (i < input.Count - 1)
+                {
+                    sb.Append(",");
+                }
+            }
+
+            sb.Append("]"); // Add the closing square bracket for the outer list
+
+            return sb.ToString();
+        }
 
 
+        static string ConvertIListToArray(IList<string> input)
+        {
+            // Create an array to hold the strings in input
+            string[] strArray = new string[input.Count];
+
+            for (int i = 0; i < input.Count; i++)
+            {
+                strArray[i] = "\"" + input[i] + "\""; // Enclose each string in double quotes
+            }
+
+            // Join the strings in strArray with commas and enclose them in square brackets
+            string result = "[" + string.Join(",", strArray) + "]";
+
+            return result;
+        }
         static void Main(string[] args)
         {
             //Question 1
