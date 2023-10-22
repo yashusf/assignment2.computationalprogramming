@@ -23,10 +23,12 @@ public static IList<IList<int>> FindMissingRanges(int[] nums, int lower, int upp
             {
                 if (start == end)
                 {
+                    // If the start and end are the same, it's a single-element range.
                     missingRanges.Add(new List<int> { (int)start });
                 }
                 else
                 {
+                    // If the start and end are different, it's a range.
                     missingRanges.Add(new List<int> { (int)start, (int)end });
                 }
             }
@@ -36,7 +38,7 @@ public static IList<IList<int>> FindMissingRanges(int[] nums, int lower, int upp
             {
                 i++;
             }
-
+             // Set the new start for the next iteration
             start = nums[i] + 1;
         }
 
@@ -44,10 +46,12 @@ public static IList<IList<int>> FindMissingRanges(int[] nums, int lower, int upp
         {
             if (start == upper)
             {
+                // If the start and upper are the same, it's a single-element range.
                 missingRanges.Add(new List<int> { (int)start });
             }
             else
             {
+                // If the start and upper are different, it's a range.
                 missingRanges.Add(new List<int> { (int)start, (int)upper });
             }
         }
@@ -56,6 +60,7 @@ public static IList<IList<int>> FindMissingRanges(int[] nums, int lower, int upp
     {
         throw;
     }
+    // Check each sublist in missingRanges, and if it has a single element, duplicate that element.
      for (int i = 0; i < missingRanges.Count; i++)
         {
             int sublistCount = missingRanges[i].Count;
