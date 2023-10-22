@@ -69,7 +69,7 @@ public static IList<IList<int>> FindMissingRanges(int[] nums, int lower, int upp
 }
 
 
-       
+
 
         // question 1 self reflection & Recommendations
         // Finding missing ranges in a sorted array was a specific challenge that had to be solved in the question.
@@ -87,48 +87,52 @@ public static IList<IList<int>> FindMissingRanges(int[] nums, int lower, int upp
         {
             try
             {
-                int n = s.Length;
-
                 // Check for an odd number of characters; if odd, it can't be valid
-                if (n % 2 != 0)
+                if (s.Length % 2 != 0)
                 {
                     return false;
                 }
 
-                for (int i = 0; i < n; i++)
+                // Create a stack to store opening brackets
+                Stack<char> stack = new Stack<char>();
+
+                // Define a dictionary to map closing brackets to their corresponding opening brackets
+                Dictionary<char, char> bracketPairs = new Dictionary<char, char>
+        {
+            { ')', '(' },
+            { ']', '[' },
+            { '}', '{' }
+        };
+
+                // Iterate through the string
+                foreach (char c in s)
                 {
-                    char currentChar = s[i];
-
-                    for (int j = 0; j < n; j++)
+                    if (bracketPairs.ContainsValue(c))
                     {
-                        char otherChar = s[j];
-
-                        if (i != j && IsClosingBracket(currentChar) && IsMatchingPair(currentChar, otherChar))
+                        // If it's an opening bracket, push it onto the stack
+                        stack.Push(c);
+                    }
+                    else if (bracketPairs.ContainsKey(c))
+                    {
+                        // If it's a closing bracket, check if the stack is empty or if the top of the stack matches
+                        if (stack.Count == 0 || stack.Pop() != bracketPairs[c])
                         {
-                            s = s.Remove(i, 1);
-                            s = s.Remove(j - 1, 1);
-                            n -= 2;
-                            i = -1; // Start over from the beginning
+                            return false; // Mismatch or stack underflow
                         }
+                    }
+                    else
+                    {
+                        return false; // Invalid character
                     }
                 }
 
-                return s.Length == 0;
+                // If the stack is empty at the end, it's valid
+                return stack.Count == 0;
             }
             catch (Exception)
             {
-                throw;
+                throw; // Re-throw any exception that may occur
             }
-        }
-
-        private static bool IsClosingBracket(char c)
-        {
-            return c == ')' || c == ']' || c == '}';
-        }
-
-        private static bool IsMatchingPair(char open, char close)
-        {
-            return (open == '(' && close == ')') || (open == '[' && close == ']') || (open == '{' && close == '}');
         }
 
         // question 2 self reflection & Recommendations
@@ -342,21 +346,7 @@ public static IList<IList<int>> FindMissingRanges(int[] nums, int lower, int upp
         }
     }
 
-        static string ConvertIListToArray(IList<string> input)
-        {
-            // Create an array to hold the strings in input
-            string[] strArray = new string[input.Count];
-
-            for (int i = 0; i < input.Count; i++)
-            {
-                strArray[i] = "\"" + input[i] + "\""; // Enclose each string in double quotes
-            }
-
-            // Join the strings in strArray with commas and enclose them in square brackets
-            string result = "[" + string.Join(",", strArray) + "]";
-
-            return result;
-        }
+       
         // question 7 learning and recommendation
         // In working with this code, I learned the importance of formatting output in different ways based on the requirements.
         // To achieve the desired output format of a JSON array with double quotes around each combination,
@@ -439,8 +429,8 @@ public static IList<IList<int>> FindMissingRanges(int[] nums, int lower, int upp
         {
             //Question 1
             Console.WriteLine("Question 1:");
-            int[] nums1 = {0,1,3,50,75};
-            int upper = 99, lower = 0;
+            int[] nums1 = {-1};
+            int upper = -1, lower = -1;
             IList<IList<int>> missingRanges = FindMissingRanges(nums1, lower, upper);
             string result = ConvertIListToNestedList(missingRanges);
             Console.WriteLine(result);
@@ -448,42 +438,42 @@ public static IList<IList<int>> FindMissingRanges(int[] nums, int lower, int upp
             Console.WriteLine();
             // Qyestion 2
             Console.WriteLine("Question 2");
-            string parenthesis = "([{()}])}";
+            string parenthesis = "(]";
             bool isValidParentheses = IsValid(parenthesis);
             Console.WriteLine(isValidParentheses);
             Console.WriteLine();
             Console.WriteLine();
             //Question 3:
             Console.WriteLine("Question 3");
-            int[] prices_array = { 7, 1, 5, 3, 6, 4 };
+            int[] prices_array = { 7, 6, 4, 3, 2, 1 };
             int max_profit = MaxProfit(prices_array);
             Console.WriteLine(max_profit);
             Console.WriteLine();
             Console.WriteLine();
             //Question4
             Console.WriteLine("Question 4");
-            string s1 = "96";
+            string s1 = "962";
             bool IsStrobogrammaticNumber = IsStrobogrammatic(s1);
             Console.WriteLine(IsStrobogrammaticNumber);
             Console.WriteLine();
             Console.WriteLine();
             // Question 5
             Console.WriteLine("Question 5");
-            int[] numbers = { 1, 2, 3, 1, 1, 3 };
+            int[] numbers = { 1,1,1,1 };
             int noOfPairs = NumIdenticalPairs(numbers);
             Console.WriteLine(noOfPairs);
             Console.WriteLine();
             Console.WriteLine();
             //Question 6:
             Console.WriteLine("Question 6");
-            int[] maximum_numbers = { 3, 2, 1 };
+            int[] maximum_numbers = {1,2};
             int third_maximum_number = ThirdMax(maximum_numbers);
             Console.WriteLine(third_maximum_number);
             Console.WriteLine();
             Console.WriteLine();
             //Question 7:
             Console.WriteLine("Question 7:");
-            string currentState = "++++";
+            string currentState = "+";
             IList<string> combinations = GeneratePossibleNextMoves(currentState);
             string combinationsString = ConvertIListToArray(combinations);
             Console.WriteLine(combinationsString);
@@ -491,7 +481,7 @@ public static IList<IList<int>> FindMissingRanges(int[] nums, int lower, int upp
             Console.WriteLine();
             //Question 8:
             Console.WriteLine("Question 8:");
-            string longString = "leetcodeisacommunityforcoders";
+            string longString = "aeiou";
             string longStringAfterVowels = RemoveVowels(longString);
             Console.WriteLine(longStringAfterVowels);
             Console.WriteLine();
