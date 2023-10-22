@@ -302,37 +302,45 @@ namespace ISM6225_Fall_2023_Assignment_2
        
 
         // Function to generate possible next moves in the Flip Game
-        public static List<string> GeneratePossibleNextMoves(string currentState)
+  
+    public static IList<string> GeneratePossibleNextMoves(string currentState)
+    {
+        try
         {
-            try
-            {
-                List<string> nextStates = new List<string>();
+            List<string> result = new List<string>();
 
-                // Iterate through the input string currentState
-                for (int i = 0; i < currentState.Length - 1; i++)
+            for (int i = 0; i < currentState.Length - 1; i++)
+            {
+                if (currentState[i] == '+' && currentState[i + 1] == '+')
                 {
-                    // Check for consecutive "++" substrings
-                    if (currentState[i] == '+' && currentState[i + 1] == '+')
-                    {
-                        // Create a char array for the next state
-                        char[] nextState = currentState.ToCharArray();
-
-                        // Flip the consecutive "++" into "--"
-                        nextState[i] = '-';
-                        nextState[i + 1] = '-';
-
-                        // Add the new state to the list
-                        nextStates.Add(new string(nextState));
-                    }
+                    // Create a new string by flipping "++" to "--"
+                    string nextState = currentState.Substring(0, i) + "--" + currentState.Substring(i + 2);
+                    result.Add(nextState);
                 }
+            }
 
-                // Return the list of possible next states
-                return nextStates;
-            }
-            catch (Exception)
+            return result;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+        static string ConvertIListToArray(IList<string> input)
+        {
+            // Create an array to hold the strings in input
+            string[] strArray = new string[input.Count];
+
+            for (int i = 0; i < input.Count; i++)
             {
-                throw;
+                strArray[i] = "\"" + input[i] + "\""; // Enclose each string in double quotes
             }
+
+            // Join the strings in strArray with commas and enclose them in square brackets
+            string result = "[" + string.Join(",", strArray) + "]";
+
+            return result;
         }
         // question 7 learning and recommendation
         // In working with this code, I learned the importance of formatting output in different ways based on the requirements.
