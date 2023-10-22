@@ -10,52 +10,51 @@ namespace ISM6225_Fall_2023_Assignment_2
         // Function to find missing ranges
         public static IList<IList<int>> FindMissingRanges(int[] nums, int lower, int upper)
         {
+            List<IList<int>> missingRanges = new List<IList<int>>();
+
             try
             {
-                IList<IList<int>> missingRanges = new List<IList<int>>();
-
-                // Handle cases where nums is empty
-                if (nums.Length == 0)
+                long start = lower;
+                for (int i = 0; i < nums.Length; i++)
                 {
-                    AddRange(missingRanges, lower, upper);
-                    return missingRanges;
+                    long end = nums[i] - 1;
+
+                    if (end >= start)
+                    {
+                        if (start == end)
+                        {
+                            missingRanges.Add(new List<int> { (int)start });
+                        }
+                        else
+                        {
+                            missingRanges.Add(new List<int> { (int)start, (int)end });
+                        }
+                    }
+
+                    start = nums[i] + 1;
                 }
 
-                // Handle the range before the first element in nums
-                AddRange(missingRanges, lower, (long)nums[0] - 1);
-
-                // Handle the ranges between elements in nums
-                for (int i = 1; i < nums.Length; i++)
+                if (start <= upper)
                 {
-                    AddRange(missingRanges, (long)nums[i - 1] + 1, (long)nums[i] - 1);
+                    if (start == upper)
+                    {
+                        missingRanges.Add(new List<int> { (int)start });
+                    }
+                    else
+                    {
+                        missingRanges.Add(new List<int> { (int)start, (int)upper });
+                    }
                 }
-
-                // Handle the range after the last element in nums
-                AddRange(missingRanges, (long)nums[nums.Length - 1] + 1, upper);
-
-                return missingRanges;
             }
             catch (Exception)
             {
-                throw; // Re-throw any exception that may occur
+                throw;
             }
+
+            return missingRanges;
         }
 
-        // Function to add a range to the list of missing ranges
-        private static void AddRange(IList<IList<int>> ranges, long start, long end)
-        {
-            if (start > end) return;
-
-            if (start == end)
-            {
-                ranges.Add(new List<int> { (int)start });
-            }
-            else
-            {
-                ranges.Add(new List<int> { (int)start, (int)end });
-            }
-        }
-        
+       
 
         // question 1 self reflection & Recommendations
         // Finding missing ranges in a sorted array was a specific challenge that had to be solved in the question.
@@ -73,53 +72,50 @@ namespace ISM6225_Fall_2023_Assignment_2
         {
             try
             {
+                int n = s.Length;
+
                 // Check for an odd number of characters; if odd, it can't be valid
-                if (s.Length % 2 != 0)
+                if (n % 2 != 0)
                 {
                     return false;
                 }
 
-                // Create a stack to store opening brackets
-                Stack<char> stack = new Stack<char>();
-
-                // Define a dictionary to map closing brackets to their corresponding opening brackets
-                Dictionary<char, char> bracketPairs = new Dictionary<char, char>
-        {
-            { ')', '(' },
-            { ']', '[' },
-            { '}', '{' }
-        };
-
-                // Iterate through the string
-                foreach (char c in s)
+                for (int i = 0; i < n; i++)
                 {
-                    if (bracketPairs.ContainsValue(c))
+                    char currentChar = s[i];
+
+                    for (int j = 0; j < n; j++)
                     {
-                        // If it's an opening bracket, push it onto the stack
-                        stack.Push(c);
-                    }
-                    else if (bracketPairs.ContainsKey(c))
-                    {
-                        // If it's a closing bracket, check if the stack is empty or if the top of the stack matches
-                        if (stack.Count == 0 || stack.Pop() != bracketPairs[c])
+                        char otherChar = s[j];
+
+                        if (i != j && IsClosingBracket(currentChar) && IsMatchingPair(currentChar, otherChar))
                         {
-                            return false; // Mismatch or stack underflow
+                            s = s.Remove(i, 1);
+                            s = s.Remove(j - 1, 1);
+                            n -= 2;
+                            i = -1; // Start over from the beginning
                         }
-                    }
-                    else
-                    {
-                        return false; // Invalid character
                     }
                 }
 
-                // If the stack is empty at the end, it's valid
-                return stack.Count == 0;
+                return s.Length == 0;
             }
             catch (Exception)
             {
-                throw; // Re-throw any exception that may occur
+                throw;
             }
         }
+
+        private static bool IsClosingBracket(char c)
+        {
+            return c == ')' || c == ']' || c == '}';
+        }
+
+        private static bool IsMatchingPair(char open, char close)
+        {
+            return (open == '(' && close == ')') || (open == '[' && close == ']') || (open == '{' && close == '}');
+        }
+
         // question 2 self reflection & Recommendations
         // I learned the value of utilizing a stack data structure to effectively track opening and closing brackets from the code for testing balanced parentheses.
         // It reaffirmed the value of effective data structures in addressing particular issues and the necessity of careful character validation.
@@ -420,8 +416,8 @@ namespace ISM6225_Fall_2023_Assignment_2
         {
             //Question 1
             Console.WriteLine("Question 1:");
-            int[] nums1 = { 3,5,7, 9, 100};
-            int upper = 100, lower = 3;
+            int[] nums1 = {0,1,3,50,75};
+            int upper = 99, lower = 0;
             IList<IList<int>> missingRanges = FindMissingRanges(nums1, lower, upper);
             string result = ConvertIListToNestedList(missingRanges);
             Console.WriteLine(result);
