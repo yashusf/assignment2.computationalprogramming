@@ -8,51 +8,66 @@ namespace ISM6225_Fall_2023_Assignment_2
     {
         //Question1
         // Function to find missing ranges
-        public static IList<IList<int>> FindMissingRanges(int[] nums, int lower, int upper)
+public static IList<IList<int>> FindMissingRanges(int[] nums, int lower, int upper)
+{
+    List<IList<int>> missingRanges = new List<IList<int>>();
+
+    try
+    {
+        long start = lower;
+        for (int i = 0; i < nums.Length; i++)
         {
-            List<IList<int>> missingRanges = new List<IList<int>>();
+            long end = nums[i] - 1;
 
-            try
+            if (end >= start)
             {
-                long start = lower;
-                for (int i = 0; i < nums.Length; i++)
+                if (start == end)
                 {
-                    long end = nums[i] - 1;
-
-                    if (end >= start)
-                    {
-                        if (start == end)
-                        {
-                            missingRanges.Add(new List<int> { (int)start });
-                        }
-                        else
-                        {
-                            missingRanges.Add(new List<int> { (int)start, (int)end });
-                        }
-                    }
-
-                    start = nums[i] + 1;
+                    missingRanges.Add(new List<int> { (int)start });
                 }
-
-                if (start <= upper)
+                else
                 {
-                    if (start == upper)
-                    {
-                        missingRanges.Add(new List<int> { (int)start });
-                    }
-                    else
-                    {
-                        missingRanges.Add(new List<int> { (int)start, (int)upper });
-                    }
+                    missingRanges.Add(new List<int> { (int)start, (int)end });
                 }
             }
-            catch (Exception)
+
+            // Check for consecutive numbers and skip the duplicates
+            while (i + 1 < nums.Length && nums[i] == nums[i + 1])
             {
-                throw;
+                i++;
             }
 
-            return missingRanges;
+            start = nums[i] + 1;
         }
+
+        if (start <= upper)
+        {
+            if (start == upper)
+            {
+                missingRanges.Add(new List<int> { (int)start });
+            }
+            else
+            {
+                missingRanges.Add(new List<int> { (int)start, (int)upper });
+            }
+        }
+    }
+    catch (Exception)
+    {
+        throw;
+    }
+     for (int i = 0; i < missingRanges.Count; i++)
+        {
+            int sublistCount = missingRanges[i].Count;
+            if (sublistCount == 1)
+            {
+                int element = missingRanges[i][0];
+                missingRanges[i].Add(element);
+            }
+        }
+    return missingRanges;
+}
+
 
        
 
